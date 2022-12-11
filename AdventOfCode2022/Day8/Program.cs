@@ -1,17 +1,17 @@
-﻿var lines = File.ReadAllLines("input.txt");
+﻿var input = File.ReadAllLines("input.txt");
 
-var grid = ParseToGrid(lines);
+var treeGrid = ParseToGrid(input);
 
-var countVisibleTress = CountVisibleTrees(lines, grid) + ((lines.First().Length + lines.Length) * 2) - 4;
+var countVisibleTress = CountVisibleTrees(input, treeGrid) + (input.First().Length + input.Length) * 2 - 4;
 
-var maxScenicScore = CountScenicScore(lines, grid);
+var maxScenicScore = CountScenicScore(input, treeGrid);
 
 Console.WriteLine($"Part 1: {countVisibleTress}");
 
 Console.WriteLine($"Part 2: {maxScenicScore}");
 
 
-static int[,] ParseToGrid(string[] lines)
+int[,] ParseToGrid(string[] lines)
 {
     var i = 0;
     var grid = new int[lines.First().Length, lines.Length];
@@ -34,33 +34,33 @@ int CountScenicScore(string[] lines, int[,] grid)
 {
     var values = new List<int>();
 
-    for (int k = 0; k < lines.First().Length; k++)
+    for (var k = 0; k < lines.First().Length; k++)
     {
-        for (int l = 0; l < lines.Length; l++)
+        for (var l = 0; l < lines.Length; l++)
         {
-            int treeHeight = grid[k, l];
+            var treeHeight = grid[k, l];
 
             var leftDistance = GetLeftViewingDistance(k, l, treeHeight, grid);
             var rightDistance = GetRightViewingDistance(k, l, treeHeight, grid);
             var downDistance = GetDownViewingDistance(k, l, treeHeight, grid);
             var upDistance = GetUpViewingDistance(k, l, treeHeight, grid);
 
-            values.Add(leftDistance*rightDistance*downDistance*upDistance);
+            values.Add(leftDistance * rightDistance * downDistance * upDistance);
         }
     }
 
     return values.Max();
 }
 
-int CountVisibleTrees(string[] lines, int[,] grid)
+int CountVisibleTrees(IReadOnlyCollection<string> lines, int[,] grid)
 {
     var count = 0;
 
-    for (int k = 1; k < lines.First().Length - 1; k++)
+    for (var k = 1; k < lines.First().Length - 1; k++)
     {
-        for (int l = 1; l < lines.Length - 1; l++)
+        for (var l = 1; l < lines.Count - 1; l++)
         {
-            int treeHeight = grid[k, l];
+            var treeHeight = grid[k, l];
 
             if (!AreLeftTreesTaller(k, l, treeHeight, grid) ||
                 !AreRightTreesTaller(k, l, treeHeight, grid) ||
@@ -68,33 +68,31 @@ int CountVisibleTrees(string[] lines, int[,] grid)
                 !AreUpTreesTaller(k, l, treeHeight, grid)) count++;
         }
     }
-
     return count;
 }
 
 int GetLeftViewingDistance(int k, int l, int treeHeight, int[,] grid)
 {
     var distance = 0;
-    for (int a = l-1; a >= 0; a--)
+    for (var a = l - 1; a >= 0; a--)
     {
         var height = grid[k, a];
 
         if (height >= treeHeight && (a != 0))
         {
-            distance++; 
+            distance++;
             break;
         }
 
         distance++;
     }
-
     return distance;
 }
 
 int GetRightViewingDistance(int k, int l, int treeHeight, int[,] grid)
 {
     var distance = 0;
-    for (int a = l + 1; a < grid.GetLength(0); a++)
+    for (var a = l + 1; a < grid.GetLength(0); a++)
     {
         var height = grid[k, a];
 
@@ -111,8 +109,8 @@ int GetRightViewingDistance(int k, int l, int treeHeight, int[,] grid)
 
 int GetDownViewingDistance(int k, int l, int treeHeight, int[,] grid)
 {
-    int distance = 0;
-    for (int a = k + 1; a < grid.GetLength(1); a++)
+    var distance = 0;
+    for (var a = k + 1; a < grid.GetLength(1); a++)
     {
         var height = grid[a, l];
 
@@ -130,7 +128,7 @@ int GetDownViewingDistance(int k, int l, int treeHeight, int[,] grid)
 int GetUpViewingDistance(int k, int l, int treeHeight, int[,] grid)
 {
     var distance = 0;
-    for (int a = k-1; a >= 0; a--)
+    for (var a = k - 1; a >= 0; a--)
     {
         var height = grid[a, l];
 
@@ -149,7 +147,7 @@ int GetUpViewingDistance(int k, int l, int treeHeight, int[,] grid)
 
 bool AreLeftTreesTaller(int k, int l, int treeHeight, int[,] grid)
 {
-    for (int a = 0; a < l; a++)
+    for (var a = 0; a < l; a++)
     {
         var height = grid[k, a];
 
@@ -162,7 +160,7 @@ bool AreLeftTreesTaller(int k, int l, int treeHeight, int[,] grid)
 
 bool AreRightTreesTaller(int k, int l, int treeHeight, int[,] grid)
 {
-    for (int a = l + 1; a < grid.GetLength(0); a++)
+    for (var a = l + 1; a < grid.GetLength(0); a++)
     {
         var height = grid[k, a];
 
@@ -175,7 +173,7 @@ bool AreRightTreesTaller(int k, int l, int treeHeight, int[,] grid)
 
 bool AreDownTreesTaller(int k, int l, int treeHeight, int[,] grid)
 {
-    for (int a = k + 1; a < grid.GetLength(1); a++)
+    for (var a = k + 1; a < grid.GetLength(1); a++)
     {
         var height = grid[a, l];
 
@@ -188,7 +186,7 @@ bool AreDownTreesTaller(int k, int l, int treeHeight, int[,] grid)
 
 bool AreUpTreesTaller(int k, int l, int treeHeight, int[,] grid)
 {
-    for (int a = 0; a < k; a++)
+    for (var a = 0; a < k; a++)
     {
         var height = grid[a, l];
 
