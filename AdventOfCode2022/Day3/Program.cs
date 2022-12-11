@@ -18,7 +18,8 @@ public class ElvesGroup
 {
     private readonly List<Rucksack> _ruckSacks;
 
-    public int ItemPriorityTotal => ItemPriority(_ruckSacks[0].BothCompartements.Select(x => x).Where(x => x.ToString().Intersect(_ruckSacks[1].BothCompartements).Any() && x.ToString().Intersect(_ruckSacks[2].BothCompartements).Any()).First());
+    public int ItemPriorityTotal => ItemPriority(_ruckSacks[0].BothCompartements.First(x => x.ToString().Intersect(_ruckSacks[1].BothCompartements).Any() && 
+                                                    x.ToString().Intersect(_ruckSacks[2].BothCompartements).Any()));
 
     public ElvesGroup(List<Rucksack> ruckSacks)
     {
@@ -41,7 +42,7 @@ public class Rucksack
 
     public string BothCompartements => _compartement1 + _compartement2;
 
-    public int ItemPriorityTotal => ItemPriority(_compartement1.Select(x => x).Where(x => _compartement2.Contains(x)).First());
+    public int ItemPriorityTotal => ItemPriority(_compartement1.First(x => _compartement2.Contains(x)));
 
 
     public Rucksack(string compartement1, string compartement2)
